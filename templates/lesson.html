@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }}{% endblock %}
+{% block content %}
+<div style="margin-bottom:14px;">
+  <a href="{{ url_for('course.course_detail', course_id=lesson.module.course_id) }}" style="text-decoration:none; font-weight:600; color:var(--primary);">
+    ← Back to {{ lesson.module.course.title }} (Module: {{ lesson.module.title }})
+  </a>
+</div>
+
+<div class="card">
+  <span class="badge" style="margin-bottom:10px;">Lesson</span>
+  <h1 style="margin-bottom:12px;">{{ lesson.title }}</h1>
+  
+  <div style="line-height:1.7; font-size:1.05rem; white-space:pre-wrap; margin:20px 0; background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border);">{{ lesson.content or "No content provided for this lesson." }}</div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); flex-wrap:wrap; gap:10px;">
+    <a class="button secondary" href="{{ url_for('course.course_detail', course_id=lesson.module.course_id) }}">← Back to Course</a>
+    {% if session.get('role') == 'student' %}
+    <form method="POST" action="{{ url_for('student.complete_lesson', course_id=lesson.module.course_id, lesson_id=lesson.id) }}" style="margin:0;">
+      <button type="submit" style="background:var(--success);">✓ Mark as Complete</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

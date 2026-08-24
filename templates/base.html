@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}LMS{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="brand"><a href="{{ url_for('course.course_list') }}" style="color:#fff;text-decoration:none;">📚 LMS</a></div>
+    <div>
+      <a href="{{ url_for('course.course_list') }}">Courses</a>
+      {% if session.get('user_id') %}
+        {% if session.get('role') == 'admin' %}<a href="{{ url_for('admin.dashboard') }}">Admin</a>{% endif %}
+        {% if session.get('role') == 'instructor' %}<a href="{{ url_for('instructor.dashboard') }}">Instructor</a>{% endif %}
+        {% if session.get('role') == 'student' %}
+          <a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('student.progress') }}">Progress</a>
+        {% endif %}
+        <a href="{{ url_for('auth.logout') }}">Logout ({{ session.get('name') }})</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        <a href="{{ url_for('auth.register') }}">Register</a>
+      {% endif %}
+    </div>
+  </nav>
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% if error_message %}
+      <div class="card"><h2>{{ error_message }}</h2><a class="button" href="{{ url_for('course.course_list') }}">Go home</a></div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}My Progress{% endblock %}
+{% block content %}
+<div style="margin-bottom:20px;">
+  <h1 style="margin:0;">My Learning History</h1>
+  <p style="color:var(--muted); margin:4px 0 0;">Review your enrolled course progress and quiz examination history.</p>
+</div>
+
+<h2>📖 Enrolled Courses ({{ enrollments|length }})</h2>
+<div class="grid">
+  {% for enrollment in enrollments %}
+  <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+    <div>
+      <h3 style="margin-bottom:8px;">
+        <a href="{{ url_for('course.course_detail', course_id=enrollment.course_id) }}">{{ enrollment.course.title }}</a>
+      </h3>
+      <div class="progress-bar-bg" style="margin:12px 0 6px;">
+        <div class="progress-bar-fill" style="width: {{ enrollment.progress_percent }}%;"></div>
+      </div>
+      <p style="font-weight:600; font-size:0.9rem; margin:0 0 14px; color:var(--muted);">
+        {{ enrollment.progress_percent }}% complete
+      </p>
+    </div>
+    <div>
+      <a class="button" href="{{ url_for('course.course_detail', course_id=enrollment.course_id) }}" style="width:100%; text-align:center;">
+        {% if enrollment.progress_percent >= 100 %}Review Course{% else %}Continue Course →{% endif %}
+      </a>
+    </div>
+  </div>
+  {% else %}
+  <div class="card" style="grid-column: 1 / -1;">
+    <p style="color:var(--muted); margin:0 0 10px;">You are not enrolled in any courses yet.</p>
+    <a class="button" href="{{ url_for('course.course_list') }}">Browse Courses</a>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 style="margin-top:32px;">📝 Quiz Attempts & Results</h2>
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Quiz Title</th>
+        <th>Score</th>
+        <th>Percentage</th>
+        <th>Passing Requirement</th>
+        <th>Result Status</th>
+        <th>Submitted Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in quiz_results %}
+      <tr>
+        <td><strong>{{ result.quiz.title }}</strong></td>
+        <td>{{ result.score }} / {{ result.total }}</td>
+        <td><strong>{{ result.percent }}%</strong></td>
+        <td>{{ result.quiz.pass_percent }}%</td>
+        <td>
+          <span class="badge" style="background:{{ 'var(--success)' if result.passed else 'var(--danger)' }}; color:#fff;">
+            {{ "Passed" if result.passed else "Failed" }}
+          </span>
+        </td>
+        <td>{{ result.submitted_at.strftime('%Y-%m-%d %H:%M') if result.submitted_at else '-' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center; color:var(--muted);">No quiz attempts yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

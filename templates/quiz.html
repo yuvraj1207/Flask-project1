@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:700px; margin:20px auto;">
+  <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
+    <div>
+      <span class="badge" style="margin-bottom:6px;">Quiz Assessment</span>
+      <h1 style="margin:4px 0;">{{ quiz.title }}</h1>
+    </div>
+    <div>
+      <span class="badge" style="font-size:0.85rem;">Passing Score: {{ quiz.pass_percent }}%</span>
+    </div>
+  </div>
+
+  {% if questions %}
+  <form method="POST" action="{{ url_for('quiz.submit_quiz', quiz_id=quiz.id) }}" style="max-width:100%; gap:16px;">
+    {% for question in questions %}
+    <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px;">
+      <p style="margin:0 0 12px; font-size:1.05rem;"><strong>{{ loop.index }}. {{ question.text }}</strong> <span style="color:var(--muted); font-size:0.85rem;">({{ question.points }} point{{ 's' if question.points != 1 else '' }})</span></p>
+      
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        {% if question.option_a %}
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:normal; padding:6px; background:#fff; border-radius:4px; border:1px solid var(--border);">
+          <input type="radio" name="question_{{ question.id }}" value="a" required style="margin:0;">
+          <span><strong>A.</strong> {{ question.option_a }}</span>
+        </label>
+        {% endif %}
+
+        {% if question.option_b %}
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:normal; padding:6px; background:#fff; border-radius:4px; border:1px solid var(--border);">
+          <input type="radio" name="question_{{ question.id }}" value="b" required style="margin:0;">
+          <span><strong>B.</strong> {{ question.option_b }}</span>
+        </label>
+        {% endif %}
+
+        {% if question.option_c %}
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:normal; padding:6px; background:#fff; border-radius:4px; border:1px solid var(--border);">
+          <input type="radio" name="question_{{ question.id }}" value="c" required style="margin:0;">
+          <span><strong>C.</strong> {{ question.option_c }}</span>
+        </label>
+        {% endif %}
+
+        {% if question.option_d %}
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:normal; padding:6px; background:#fff; border-radius:4px; border:1px solid var(--border);">
+          <input type="radio" name="question_{{ question.id }}" value="d" required style="margin:0;">
+          <span><strong>D.</strong> {{ question.option_d }}</span>
+        </label>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+      <a class="button secondary" href="{{ url_for('student.dashboard') }}">Cancel</a>
+      <button type="submit" style="padding:10px 24px; font-size:1rem;">Submit Quiz</button>
+    </div>
+  </form>
+  {% else %}
+  <p style="color:var(--muted); margin:20px 0;">This quiz does not have any questions yet.</p>
+  <a class="button secondary" href="{{ url_for('student.dashboard') }}">Back to Dashboard</a>
+  {% endif %}
+</div>
+{% endblock %}
