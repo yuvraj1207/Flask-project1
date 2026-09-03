@@ -3,9 +3,9 @@ def format_filesize(bytes_val):
         return "0 Bytes"
     for unit in ['Bytes','KB','MB','GB']:
         if bytes_val < 1024.0:
-            return "unit"
+            return f"{bytes_val:.1f} {unit}"
         bytes_val /= 1024.0
-    return "bytes_val"
+    return f"{bytes_val:.1f} TB"
 
 
 def register_filters(app):

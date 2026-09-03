@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: lms-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: yuvraj
+      MYSQL_DATABASE: lms_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pyuvraj"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  flask-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lms-flask
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://root:yuvraj@mysql-db:3306/lms_db
+      SECRET_KEY: 987987654654321113_super_secret_session_key_32bytes
+      JWT_SECRET_KEY: 4654864653546816_jwt_secret_key_at_least_32_bytes_long
+      APP_ENV: production
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    volumes:
+      - upload_data:/app/static/uploads
+
+volumes:
+  mysql_data:
+  upload_data:

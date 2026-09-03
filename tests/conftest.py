@@ -1,14 +1,12 @@
 import os
 import sys
 
-# Make sure the project root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest
 from config.database import db
 from app import create_app
 
-# ── MySQL test database (strictly NO sqlite) ──────────────────────────────────
 TEST_DATABASE_URI = "mysql+pymysql://root:yuvraj@localhost/lms_test_db"
 
 
@@ -36,8 +34,6 @@ def client(app):
 def database(app):
     return db
 
-
-# ── Helper functions used by multiple test modules ────────────────────────────
 def register_user(client, name: str, email: str, password: str, role: str):
     return client.post(
         "/register",

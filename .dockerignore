@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.env
+venv/
+instance/logs/
+.pytest_cache/
+tests/
+kubernetes-deploy/
+docker-compose.yml
+*.md
+.gitignore
+.dockerignore

@@ -50,7 +50,7 @@ class AuthService:
 
     @staticmethod
     def authenticate(email: str, password: str):
-        """Return the User if credentials are valid, else raise AuthError."""
+
         if not email or not password:
             raise AuthError("Email and password are required.")
 

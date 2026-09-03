@@ -15,7 +15,6 @@ def register():
         try:
             AuthService.register(name, email, password, role)
 
-            # Audit log: successful registration
             audit_log(
                 "REGISTRATION_SUCCESS | email=%s | role=%s",
                 email,
@@ -26,7 +25,6 @@ def register():
             return redirect(url_for("auth.login"))
         except AuthError as exc:
 
-            # Audit log: failed registration
             audit_log(
                 "REGISTRATION_FAILURE | email=%s | role=%s | reason=%s",
                 email,
@@ -46,9 +44,8 @@ def login():
         try:
             user = AuthService.authenticate(email, password)
 
-            # Audit log: successful login
             audit_log(
-                "LOGIN_SUCCESS | user_id=%s | email=%s | role=%s",
+                "LOGIN_SUCCESS | user_id=%s | email=%s | role=%s",    # Audit log: successful login      
                 user.id,
                 email,
                 user.role
@@ -93,7 +90,6 @@ def logout():
     return redirect(url_for("auth.login"))
 
 
-# ── API endpoint ─────────────────────────────────────────────────────────────
 @auth_bp.route("/api/auth/login", methods=["POST"])
 def api_login():
     data = request.get_json(force=True, silent=True) or {}
@@ -119,4 +115,4 @@ def api_login():
             str(exc)
         )
 
-        return jsonify({"error": str(exc)}), 401
+        return jsonify({"error": str(exc)}), 401    #deserlisation

@@ -22,6 +22,6 @@ def init_db(app):
         app.config.get("JWT_SECRET_KEY") or os.getenv("JWT_SECRET_KEY")
     )
 
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=24)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=12)
 
     db.init_app(app)

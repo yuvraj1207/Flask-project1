@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  MYSQL_DATABASE: lms_db
+  MYSQL_HOST: mysql-service
+  MYSQL_PORT: "3306"
+  APP_ENV: production
