@@ -12,3 +12,4 @@ docker-compose.yml
 *.md
 .gitignore
 .dockerignore
+secret.yaml

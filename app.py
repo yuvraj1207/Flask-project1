@@ -23,7 +23,7 @@ def create_app(database_uri: str = None) -> Flask:
         or os.environ.get("MYSQL_DB_URL")
         or os.environ.get("DATABASE_URI")
         or os.environ.get("DATABASE_URL")
-        or "mysql+pymysql://root:yuvraj@localhost:3306/lms_db"
+
     )
     app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 
@@ -131,7 +131,15 @@ def create_app(database_uri: str = None) -> Flask:
 
 app = create_app()
 
+#from your_module import create_app  # Ensure create_app is imported
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 3000))
+    # 1. Create the application instance using the factory function
+    app = create_app()
+
+    # 2. Retrieve dynamic settings or fall back to safe defaults
+    port = int(os.environ.get("PORT", 5000))
     debug = os.environ.get("APP_ENV", "development") != "production"
+
+    # 3. Run the application
     app.run(host="0.0.0.0", port=port, debug=debug)

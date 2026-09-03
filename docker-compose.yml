@@ -1,19 +1,17 @@
-version: "3.8"
-
 services:
   mysql-db:
     image: mysql:8.0
     container_name: lms-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: yuvraj
-      MYSQL_DATABASE: lms_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pyuvraj"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -28,10 +26,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      SQLALCHEMY_DATABASE_URI: mysql+pymysql://root:yuvraj@mysql-db:3306/lms_db
-      SECRET_KEY: 987987654654321113_super_secret_session_key_32bytes
-      JWT_SECRET_KEY: 4654864653546816_jwt_secret_key_at_least_32_bytes_long
-      APP_ENV: production
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://root:${MYSQL_ROOT_PASSWORD}@mysql-db:3306/${MYSQL_DATABASE}
+      SECRET_KEY: ${SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      APP_ENV: ${APP_ENV}
     depends_on:
       mysql-db:
         condition: service_healthy
