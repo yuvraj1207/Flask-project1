@@ -92,7 +92,9 @@ def logout():
 
 @auth_bp.route("/api/auth/login", methods=["POST"])
 def api_login():
-    data = request.get_json(force=True, silent=True) or {}
+    data = request.get_json(force=True, silent=True)
+    if not isinstance(data, dict):
+        data = request.form.to_dict() if request.form else {}
     try:
         user  = AuthService.authenticate(data.get("email", ""), data.get("password", ""))
 

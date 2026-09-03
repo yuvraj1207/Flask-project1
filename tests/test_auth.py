@@ -47,7 +47,8 @@ def test_rbac_admin_can_access_admin_dashboard(client):
 
 
 def test_api_login_returns_jwt(client):
-    register_user(client, "Gina", "gina@example.com", "password123", "instructor")
+    reg_resp = register_user(client, "Gina", "gina@example.com", "password123", "instructor")
+    assert reg_resp.status_code == 200
     resp = client.post("/api/auth/login", json={"email": "gina@example.com", "password": "password123"})
     assert resp.status_code == 200
     assert "token" in resp.get_json()

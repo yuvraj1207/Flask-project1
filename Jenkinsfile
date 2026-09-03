@@ -72,7 +72,7 @@ pipeline {
                         <b>URL</b>: ${env.BUILD_URL}
                     </p>
                 """,
-                to: "yuvrajhinde21@gmail.com"
+                to: "yuvrajhinde2016@gmail.com"
             )
         }
     }

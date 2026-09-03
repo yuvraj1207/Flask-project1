@@ -16,13 +16,30 @@ def app():
     application = create_app(database_uri=TEST_DATABASE_URI)
 
     with application.app_context():
-        db.drop_all()    # clean slate
-        db.create_all()  # rebuild schema
+        from sqlalchemy import text
+        db.session.remove()
+        try:
+            db.session.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
+            db.drop_all()    # clean slate
+            db.create_all()  # rebuild schema
+            db.session.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            db.drop_all()
+            db.create_all()
 
         yield application
 
         db.session.remove()
-        db.drop_all()
+        try:
+            db.session.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
+            db.drop_all()
+            db.session.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            db.drop_all()
 
 
 @pytest.fixture()
